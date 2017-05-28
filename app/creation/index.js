@@ -35,7 +35,6 @@ class Item extends Component {
 
   render() {
     var row = this.props.row;
-    console.log(this.props);
     return (
       <TouchableOpacity onPress={() => {this.props.onSelect(row)}}>
         <View style={styles.item}>
@@ -268,7 +267,7 @@ class List extends Component {
       name: 'detail',
       component: Detail,
       params: {
-        row: row
+        data: row
       }
     });
   }
