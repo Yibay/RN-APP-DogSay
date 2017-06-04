@@ -27,13 +27,11 @@ class Detail extends Component {
       videoProgress: 0.01,
       videoTotal: 0,
       currentTime: 0,
-      playing: true,
       paused: false
     }
   }
 
   render() {
-    console.log(this.props);
     var data = this.props.data;
     return (
       <View style={styles.container}>
@@ -62,7 +60,7 @@ class Detail extends Component {
               !this.state.videoLoaded && <ActivityIndicator color='#ee735c' style={styles.loading} />
             }
             {
-              this.state.videoLoaded && !this.state.playing && <Icon name='ios-play' style={styles.playIcon} />
+              this.state.videoLoaded && this.state.paused && <Icon name='ios-play' style={styles.playIcon} />
             }
           </View>
         </TouchableWithoutFeedback>
@@ -72,11 +70,11 @@ class Detail extends Component {
       </View>
     );
   }
-
+  // 导航组件 返回上层
   _backToList() {
     this.props.navigator.pop();
   }
-
+  // 视频组件 生命周期
   _onLoadStart() {
     console.log('load start');
   }
@@ -84,7 +82,6 @@ class Detail extends Component {
     console.log('loads');
   }
   _onProgress(data) {
-
     var duration = data.playableDuration;
     var currentTime = data.currentTime;
     var percent = Number((currentTime / duration).toFixed(2));
@@ -97,37 +94,30 @@ class Detail extends Component {
     if(!this.state.videoLoaded){
       newState.videoLoaded = true;
     }
-    if(!this.state.playing && !this.state.paused){
-      newState.playing = true;
-    }
 
     this.setState(newState);
-
   }
   _onEnd() {
     this.setState({
       videoProgress: 1,
-      playing: false,
       paused: true
     });
   }
   _onError(e) {
-    console.log(e);
     console.log('error');
+    console.log(e);
   }
+  // 播放控制
   _rePlay() {
+    this.refs.videoPlayer.seek(0);
     this.setState({
-      videoProgress: 0.01,
       paused: false
     });
-    this.refs.videoPlayer.seek(0);
   }
   _pause() {
     var paused = !this.state.paused;
-    var playing = !this.state.playing;
     this.setState({
-      paused: paused,
-      playing: playing
+      paused: paused
     });
   }
   _pauseCtrl() {
@@ -195,10 +185,10 @@ var styles = StyleSheet.create({
     lineHeight: 60,
     backgroundColor: 'transparent',
     borderRadius: 30,
-    borderColor: '#000',
+    borderColor: '#ed7b66',
     borderWidth: 1,
     textAlign: 'center',
-    color: '#000'
+    color: '#ed7b66'
   }
 });
 
